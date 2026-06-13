@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElevenScript — Estudio de diseño y desarrollo digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* PALETA ACTUALIZADA */
+      --ink: #4a3f55;           /* Violeta muy oscuro para texto */
+      --ink-mid: #7e6e8c;       /* Violeta medio */
+      --ink-soft: #a89bb8;      /* Violeta claro para detalles */
+      --paper: #ffffff;         /* Blanco puro */
+      --paper-warm: #fdf6f9;    /* Rosa muy claro (casi blanco) */
+      --rule: #f0e0e6;          /* Rosa pastel suave para líneas */
+      --accent: #d88bad;        /* Rosa pastel intenso para destacados */
+      --accent-soft: #fceaf2;    /* Fondo rosa muy suave */
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); font-style: italic; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--ink-mid); transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+    }
+    .hero-left {
+      padding: 80px 60px;
+      display: flex; flex-direction: column; justify-content: center;
+      border-right: 1px solid var(--rule);
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 32px;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 900; line-height: 0.95;
+      letter-spacing: -0.03em; color: var(--ink); margin-bottom: 40px;
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-body {
+      font-size: 17px; font-weight: 300; line-height: 1.75;
+      color: var(--ink-mid); max-width: 440px; margin-bottom: 52px;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; text-decoration: none;
+      color: white; background: var(--ink);
+      padding: 16px 32px; transition: background 0.25s; align-self: flex-start;
+    }
+    .hero-cta:hover { background: var(--accent); }
+    .hero-right {
+      padding: 80px 60px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      background: var(--paper-warm);
+    }
+    .hero-stat { margin-bottom: 48px; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 80px; font-weight: 900; line-height: 1;
+      color: var(--ink); letter-spacing: -0.04em;
+    }
+    .stat-label {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-soft); margin-top: 8px;
+    }
+    .hero-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 400; font-style: italic;
+      line-height: 1.45; color: var(--ink-mid);
+      border-top: 1px solid var(--rule); padding-top: 32px;
+    }
+
+    /* INTRO */
+    .intro {
+      padding: 120px 60px;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--ink-soft); margin-bottom: 48px;
+    }
+    .section-label::before {
+      content: ''; display: block; width: 32px; height: 1px; background: var(--accent);
+    }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .intro-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink);
+    }
+    .intro-heading em { font-style: italic; color: var(--accent); }
+    .intro-text { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--ink-mid); }
+    .intro-text p + p { margin-top: 1em; }
+    .problems-list { margin-top: 40px; list-style: none; display: flex; flex-direction: column; }
+    .problem-item {
+      display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+      padding: 24px 0; border-bottom: 1px solid var(--rule); align-items: start;
+    }
+    .problem-item:first-child { border-top: 1px solid var(--rule); }
+    .problem-num {
+      font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900;
+      color: var(--paper-warm); -webkit-text-stroke: 1px var(--rule); line-height: 1; padding-top: 4px;
+    }
+    .problem-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .problem-desc { font-size: 14px; font-weight: 300; color: var(--ink-mid); line-height: 1.6; }
+
+    /* SERVICIOS */
+    .services { padding: 120px 0; border-bottom: 1px solid var(--rule); }
+    .services-header { padding: 0 60px; margin-bottom: 72px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+    .services-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 4.5vw, 4rem);
+      font-weight: 900; line-height: 1.05; letter-spacing: -0.03em;
+    }
+    .services-title em { font-style: italic; color: var(--accent); }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .service-card {
+      background: var(--paper);
+      cursor: pointer;
+      transition: background 0.2s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card:hover { background: var(--paper-warm); }
+    .service-thumb {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top;
+      display: block; border-bottom: 1px solid var(--rule); transition: opacity 0.2s;
+    }
+    .service-card:hover .service-thumb { opacity: 0.88; }
+    .service-body { padding: 28px 28px 32px; flex: 1; display: flex; flex-direction: column; }
+    .service-idx {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px;
+    }
+    .service-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--ink); margin-bottom: 10px; transition: color 0.2s;
+    }
+    .service-card:hover .service-name { color: var(--accent); }
+    .service-problem {
+      font-size: 13px; font-weight: 300; color: var(--ink-soft); line-height: 1.55; flex: 1;
+    }
+    .service-footer {
+      display: flex; justify-content: space-between; align-items: center; margin-top: 20px;
+    }
+    .service-tag {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-soft); padding: 5px 12px;
+    }
+    .service-arrow {
+      font-size: 18px; color: var(--ink-soft); transition: transform 0.2s, color 0.2s;
+    }
+    .service-card:hover .service-arrow { transform: translateX(5px); color: var(--accent); }
+
+    /* LIGHTBOX */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(74, 63, 85, 0.95);
+      align-items: center; justify-content: center;
+    }
+    .lightbox-overlay.active { display: flex; }
+    .lightbox-inner { position: relative; max-width: 880px; width: 90vw; }
+    .lightbox-img { width: 100%; max-height: 80vh; object-fit: contain; display: block; border: 1px solid rgba(255,255,255,0.1); }
+    .lightbox-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+    .lb-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; font-size: 22px; width: 44px; height: 44px; cursor: pointer;
+    }
+    .lb-btn:hover { border-color: var(--accent); background: var(--accent); }
+    .lb-dot.active { background: var(--accent); }
+    .lb-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; }
+    .lb-open-btn {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #fff;
+      text-decoration: none; border-bottom: 1px solid #fff;
+      padding-bottom: 2px; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none;
+    }
+
+    /* NOSOTROS */
+    .about { padding: 120px 60px; max-width: 1100px; margin: 0 auto; }
+    .about-header { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 80px; align-items: end; }
+    .about-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4.5vw, 4rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+    .about-title em { font-style: italic; color: var(--accent); }
+    .about-intro { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--ink-mid); }
+    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+    .team-card { background: var(--paper); padding: 48px 40px; }
+    .team-card:hover { background: var(--paper-warm); }
+    .team-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .team-role { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .team-bio { font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--ink-mid); }
+    .team-portfolio { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); border-bottom: 1px solid var(--rule); margin-top: 20px; }
+    .team-portfolio:hover { color: var(--accent); border-color: var(--accent); }
+    .team-photo {
+      width: 64px; /* Antes era 88px */
+      height: 64px; /* Antes era 88px */
+      object-fit: cover; 
+      object-position: center top;
+      margin-bottom: 20px; /* Reducido un poco para compensar */
+      display: block;
+      filter: grayscale(20%); 
+      transition: filter 0.3s;
+      border-radius: 50%; /* Opcional: Esto hace que las fotos sean redondas, ¡queda muy bien con este estilo! */
+    }
+    /* FOOTER */
+    footer { border-top: 1px solid var(--rule); padding: 48px 60px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
+    .footer-logo span { color: var(--accent); font-style: italic; }
+    .footer-copy { font-size: 13px; color: var(--ink-soft); }
+
+    @media (max-width: 900px) {
+      /* (Mismo responsive original) */
+      nav { padding: 16px 24px; } .hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 60px 24px; border-right: none; border-bottom: 1px solid var(--rule); }
+      .services-header { padding: 0 24px; } .service-grid { grid-template-columns: 1fr; }
+      .about { padding: 72px 24px; } .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <!-- NAV -->
+
+  <nav>
+
+    <a class="nav-logo" href="#">Eleven<span>Script</span></a>
+
+    <ul class="nav-links">
+
+      <li><a href="#servicios">Servicios</a></li>
+
+      <li><a href="#nosotros">Nosotros</a></li>
+
+      <li><a href="#">E.S</a></li>
+
+    </ul>
+
+  </nav>
+
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-left">
+
+      <p class="hero-eyebrow">Estudio digital · Buenos Aires</p>
+
+      <h1 class="hero-title">
+
+        Diseño y<br>código que<br><em>resuelve.</em>
+
+      </h1>
+
+      <p class="hero-body">
+
+        Creamos herramientas digitales a medida para negocios reales.
+
+        Desde la primera pantalla hasta el último renglón de código —
+
+        con criterio, con estética y sin soluciones genéricas.
+
+      </p>
+
+      <a href="#servicios" class="hero-cta">
+
+        Ver servicios
+
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 7h12M7 1l6 6-6 6"/></svg>
+
+      </a>
+
+    </div>
+
+    <div class="hero-right">
+
+      <div class="hero-stat">
+
+        <div class="stat-num">6</div>
+
+        <div class="stat-label">Soluciones en producción</div>
+
+      </div>
+
+      <div class="hero-stat">
+
+        <div class="stat-num">100%</div>
+
+        <div class="stat-label">Desarrollo a medida</div>
+
+      </div>
+
+      <p class="hero-tagline">
+
+        "Cada problema de negocio merece<br>
+
+        una solución pensada desde adentro."
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- PROBLEMAS -->
+
+  <section class="intro">
+
+    <span class="section-label">El problema</span>
+
+    <div class="intro-grid">
+
+      <div>
+
+        <h2 class="intro-heading">
+
+          Las empresas pierden tiempo en tareas que
+
+          <em>deberían ser automáticas.</em>
+
+        </h2>
+
+      </div>
+
+      <div>
+
+        <div class="intro-text">
+
+          <p>Muchos negocios siguen gestionando su inventario en papel, coordinando turnos por WhatsApp o registrando préstamos en cuadernos. Funciona — hasta que deja de funcionar.</p>
+
+          <p>En ElevenScript identificamos esos cuellos de botella y los convertimos en interfaces claras, rápidas y fáciles de usar por cualquier persona del equipo.</p>
+
+        </div>
+
+        <ul class="problems-list">
+
+          <li class="problem-item">
+
+            <span class="problem-num">01</span>
+
+            <div>
+
+              <p class="problem-title">Procesos manuales y propensos a errores</p>
+
+              <p class="problem-desc">Inventarios en planillas, turnos en papel, registros duplicados.</p>
+
+            </div>
+
+          </li>
+
+          <li class="problem-item">
+
+            <span class="problem-num">02</span>
+
+            <div>
+
+              <p class="problem-title">Sin visibilidad en tiempo real</p>
+
+              <p class="problem-desc">No saber cuánto hay en stock o qué turnos están disponibles cuesta plata.</p>
+
+            </div>
+
+          </li>
+
+          <li class="problem-item">
+
+            <span class="problem-num">03</span>
+
+            <div>
+
+              <p class="problem-title">Herramientas genéricas que no encajan</p>
+
+              <p class="problem-desc">Los sistemas masivos no hablan el idioma de cada negocio.</p>
+
+            </div>
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- SERVICIOS -->
+
+  <section class="services" id="servicios">
+
+    <div class="services-header">
+
+      <span class="section-label">Soluciones</span>
+
+      <h2 class="services-title">
+
+        Lo que <em>construimos</em><br>para vos.
+
+      </h2>
+
+    </div>
+
+
+
+    <div class="service-grid">
+
+
+
+      <div class="service-card" onclick="openLightbox('bodega')">
+
+        <img class="service-thumb" src="bodega1.png" alt="Control de Bodega">
+
+        <div class="service-body">
+
+          <p class="service-idx">001</p>
+
+          <p class="service-name">Control de Bodega</p>
+
+          <p class="service-problem">¿Cuántas barricas llenas tenés? ¿Cuáles están vacías? Dejá de adivinarlo.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Inventario</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="service-card" onclick="openLightbox('calensemanal')">
+
+        <img class="service-thumb" src="calen1.png" alt="Calendario Semanal de Turnos">
+
+        <div class="service-body">
+
+          <p class="service-idx">002</p>
+
+          <p class="service-name">Calendario Semanal</p>
+
+          <p class="service-problem">Superposición de turnos, llamadas innecesarias, horarios que nadie registra bien.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Turnos</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="service-card" onclick="openLightbox('calendia')">
+
+        <img class="service-thumb" src="calendario_s1.png" alt="Calendario de un Día">
+
+        <div class="service-body">
+
+          <p class="service-idx">003</p>
+
+          <p class="service-name">Calendario de un Día</p>
+
+          <p class="service-problem">Sin login, sin sistema: los horarios disponibles se mezclan con los reservados.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Reservas</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="service-card" onclick="openLightbox('biblioteca')">
+
+        <img class="service-thumb" src="biblioteca_1.png" alt="Biblioteca del Barrio">
+
+        <div class="service-body">
+
+          <p class="service-idx">004</p>
+
+          <p class="service-name">Biblioteca del Barrio</p>
+
+          <p class="service-problem">Libros prestados sin registro, socios que olvidan devolver, plazos vencidos sin alerta.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Préstamos</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="service-card" onclick="openLightbox('estetica')">
+
+        <img class="service-thumb" src="estetica_1.png" alt="Estudio Manos">
+
+        <div class="service-body">
+
+          <p class="service-idx">005</p>
+
+          <p class="service-name">Estudio Manos</p>
+
+          <p class="service-problem">Turnos de manicuría y masajes que se chocan, profesionales sin agenda clara.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Agenda</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="service-card" onclick="openLightbox('vivero')">
+
+        <img class="service-thumb" src="vivero_1.png" alt="Vivero El Brote">
+
+        <div class="service-body">
+
+          <p class="service-idx">006</p>
+
+          <p class="service-name">Vivero El Brote</p>
+
+          <p class="service-problem">Stock de plantas que se desactualiza, sin alertas cuando hay que reponer.</p>
+
+          <div class="service-footer">
+
+            <span class="service-tag">Stock</span>
+
+            <span class="service-arrow">→</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- NOSOTROS -->
+
+  <section class="about" id="nosotros">
+
+    <span class="section-label">El equipo</span>
+
+    <div class="about-header">
+
+      <h2 class="about-title">Sobre<br><em>nosotros.</em></h2>
+
+      <p class="about-intro">
+
+        Somos un estudio de dos. Cada proyecto pasa por las mismas manos de principio a fin — sin intermediarios, sin tercerización, sin sorpresas. Diseñamos, codificamos y entregamos.
+
+      </p>
+
+    </div>
+
+    <div class="team-grid">
+
+      <div class="team-card">
+
+        <img class="team-photo" src="bianca.jpeg" alt="Bianca Santucho">
+
+        <p class="team-name">Bianca Santucho</p>
+
+        <p class="team-role">Desarrollo & Frontend</p>
+
+        <p class="team-bio">Desarrolladora con foco en interfaces limpias y funcionales. Lleva cada proyecto desde el wireframe hasta el código que corre en producción.</p>
+
+        <a class="team-portfolio" href="https://github.com/biancamalvinasantucho-cpu/portafolio" target="_blank" rel="noopener">
+
+          Ver portfolio
+
+          <svg viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 10L10 1M10 1H4M10 1v6"/></svg>
+
+        </a>
+
+      </div>
+
+      <div class="team-card">
+
+        <img class="team-photo" src="mariel.jpeg" alt="Mariel Szewaga">
+
+        <p class="team-name">Mariel Szewaga</p>
+
+        <p class="team-role">Diseño & UX</p>
+
+        <p class="team-bio">Diseñadora con criterio editorial y ojo para el detalle. Se encarga de que cada producto sea tan claro de usar como lindo de mirar.</p>
+
+        <a class="team-portfolio" href="https://github.com/MarielSzewaga/portafolioMarielSzewaga" target="_blank" rel="noopener">
+
+          Ver portfolio
+
+          <svg viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 10L10 1M10 1H4M10 1v6"/></svg>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-logo">Eleven<span>Script</span></div>
+
+    <p class="footer-copy">© 2025 ElevenScript · Estudio de diseño y desarrollo digital · Buenos Aires</p>
+
+  </footer>
+
+
+
+  <!-- LIGHTBOX -->
+
+  <div class="lightbox-overlay" id="lightbox" onclick="handleOverlayClick(event)">
+
+    <div class="lightbox-inner">
+
+      <button class="lb-close" onclick="closeLightbox()">✕</button>
+
+      <p class="lightbox-title" id="lb-title"></p>
+
+      <img class="lightbox-img" id="lb-img" src="" alt="">
+
+      <div class="lightbox-controls">
+
+        <button class="lb-btn" onclick="prevSlide()">←</button>
+
+        <div class="lb-dots" id="lb-dots"></div>
+
+        <div style="display:flex;align-items:center;gap:16px;">
+
+          <button class="lb-open-btn" id="lb-open" onclick="openService()">Abrir proyecto →</button>
+
+          <button class="lb-btn" onclick="nextSlide()">→</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <script>
+
+    const services = {
+
+      bodega:      { title: "Control de Bodega",        imgs: ["bodega1.png","bodega2.png","bodega3.png"], url: "bodega.html" },
+
+      calensemanal:{ title: "Calendario Semanal de Turnos", imgs: ["calen1.png","calen2.png","calen3.png"], url: "index.html" },
+
+      calendia:    { title: "Calendario de un Día",     imgs: ["calendario_s1.png","calendario_s2.png","calendario_s3.png"], url: "calendario_de_un_dia.html" },
+
+      biblioteca:  { title: "Biblioteca del Barrio",    imgs: ["biblioteca_1.png","biblioteca_2.png"], url: "biblioteca.html" },
+
+      estetica:    { title: "Estudio Manos",             imgs: ["estetica_1.png","estetica_2.png"], url: "estetica.html" },
+
+      vivero:      { title: "Vivero El Brote",           imgs: ["vivero_1.png","vivero_2.png"], url: "vivero.html" },
+
+    };
+
+
+
+    let current = null;
+
+    let idx = 0;
+
+
+
+    function openLightbox(key) {
+
+      current = key;
+
+      idx = 0;
+
+      renderLightbox();
+
+      document.getElementById('lightbox').classList.add('active');
+
+      document.body.style.overflow = 'hidden';
+
+    }
+
+
+
+    function closeLightbox() {
+
+      document.getElementById('lightbox').classList.remove('active');
+
+      document.body.style.overflow = '';
+
+    }
+
+
+
+    function handleOverlayClick(e) {
+
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+
+    }
+
+
+
+    function renderLightbox() {
+
+      const s = services[current];
+
+      document.getElementById('lb-title').textContent = s.title;
+
+      document.getElementById('lb-img').src = s.imgs[idx];
+
+      document.getElementById('lb-img').alt = s.title;
+
+      document.getElementById('lb-open').dataset.url = s.url;
+
+
+
+      const dots = document.getElementById('lb-dots');
+
+      dots.innerHTML = '';
+
+      s.imgs.forEach((_, i) => {
+
+        const d = document.createElement('div');
+
+        d.className = 'lb-dot' + (i === idx ? ' active' : '');
+
+        d.onclick = () => { idx = i; renderLightbox(); };
+
+        dots.appendChild(d);
+
+      });
+
+    }
+
+
+
+    function nextSlide() {
+
+      const s = services[current];
+
+      idx = (idx + 1) % s.imgs.length;
+
+      renderLightbox();
+
+    }
+
+
+
+    function prevSlide() {
+
+      const s = services[current];
+
+      idx = (idx - 1 + s.imgs.length) % s.imgs.length;
+
+      renderLightbox();
+
+    }
+
+
+
+    function openService() {
+
+      window.open(services[current].url);
+
+    }
+
+
+
+    document.addEventListener('keydown', e => {
+
+      if (!document.getElementById('lightbox').classList.contains('active')) return;
+
+      if (e.key === 'Escape') closeLightbox();
+
+      if (e.key === 'ArrowRight') nextSlide();
+
+      if (e.key === 'ArrowLeft') prevSlide();
+
+    });
+
+  </script>
+
+</body>
+</html>
